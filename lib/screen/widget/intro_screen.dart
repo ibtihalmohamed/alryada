@@ -5,6 +5,8 @@ import '../../helpers/consts.dart';
 import '../../main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'clickacble_text_widget.dart';
+
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
 
@@ -13,6 +15,7 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
+  int currentIndex = 1;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -23,13 +26,35 @@ class _IntroScreenState extends State<IntroScreen> {
         title: AppLocalizations.of(context)!.introne,
       ),
       IntroCard(
-        image: 'assets/onpordingtwo.png',
-        title: "Explore Our Products",
+        image: 'assets/play.png',
+        title: AppLocalizations.of(context)!.introtwo,
       ),
-      IntroCard(image: 'assets/onbordingthree.png', title: "Get Started Now!"),
+      IntroCard(
+        image: 'assets/remot.png',
+        title: AppLocalizations.of(context)!.introthree,
+      ),
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: Text("$currentIndex/3"),
+        actions: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: ClickableText(
+                  text: AppLocalizations.of(context)!.skip,
+                  onPressed: () {
+                    // Navigator.push(
+                    //     context,
+                    //     CupertinoPageRoute(
+                    //         builder: (context) => const LoginScreen()));
+                  }),
+            ),
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
           child: Text(""),
           onPressed: () {
@@ -57,8 +82,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                   child: Text(
-                    // AppLocalizations.of(context)!.enter,
-                    "",
+                    AppLocalizations.of(context)!.ccontinue,
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
@@ -70,8 +94,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
                   child: Text(
-                    //  AppLocalizations.of(context)!.next,
-                    "",
+                    AppLocalizations.of(context)!.ccontinue,
                     style: const TextStyle(
                       color: Colors.white,
                     ),
@@ -79,8 +102,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 ),
               ),
               skip: Text(
-                //  AppLocalizations.of(context)!.skip,
-                "",
+                AppLocalizations.of(context)!.skip,
                 style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
               ),
               showSkipButton: true,
