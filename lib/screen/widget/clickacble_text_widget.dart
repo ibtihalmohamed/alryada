@@ -6,7 +6,7 @@ class ClickableText extends StatefulWidget {
     required this.text,
     required this.onPressed,
     this.fontSize = 14,
-    this.color = Colors.black,
+    this.color = const Color(0xff8E0150),
     this.useColors = false,
     this.enabled = true,
     this.withUnderline = false,

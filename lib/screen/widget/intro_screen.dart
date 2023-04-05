@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:myappecomers/screen/widget/static_widgets/intro_card.dart';
-import '../../helpers/consts.dart';
-import '../../main.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:myappecomers/screen/widget/static_widgets/main_button_widget.dart';
 
+import '../../helpers/consts.dart';
 import 'clickacble_text_widget.dart';
 
 class IntroScreen extends StatefulWidget {
-  const IntroScreen({super.key});
+  static String id = 'intro_screen';
+  const IntroScreen({Key? key}) : super(key: key);
 
   @override
   State<IntroScreen> createState() => _IntroScreenState();
@@ -16,11 +17,10 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   int currentIndex = 1;
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
-    List<Widget> listPagesViewModel = [
+    List<Widget> pages = [
       IntroCard(
         image: 'assets/onpordingone.png',
         title: AppLocalizations.of(context)!.introne,
@@ -34,7 +34,8 @@ class _IntroScreenState extends State<IntroScreen> {
         title: AppLocalizations.of(context)!.introthree,
       ),
     ];
-
+    Size size = MediaQuery.of(context).size;
+    // final themeListener = Provider.of<DarkThemeProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -45,6 +46,7 @@ class _IntroScreenState extends State<IntroScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: ClickableText(
                   text: AppLocalizations.of(context)!.skip,
+                  // color: darkGreyColor,
                   onPressed: () {
                     // Navigator.push(
                     //     context,
@@ -55,79 +57,62 @@ class _IntroScreenState extends State<IntroScreen> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Text(""),
-          onPressed: () {
-            AppLocalizations.of(context)!.localeName == 'ar'
-                ? MyApp.setLocale(context, const Locale('en'))
-                : MyApp.setLocale(context, const Locale('ar'));
-          }),
-      body: Column(
-        children: [
-          SafeArea(
-            child: Image.asset(
-              'assets/logo.png',
-              height: size.height * 0.2,
-              width: size.width * 0.33,
-              fit: BoxFit.contain,
-            ),
+      body: IntroductionScreen(
+        showSkipButton: false,
+        showBackButton: false,
+        showDoneButton: false,
+        showNextButton: false,
+        dotsDecorator: DotsDecorator(
+          size: const Size.square(9.0),
+          activeSize: const Size(18.0, 9.0),
+          activeShape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+          activeColor: mainColor,
+          color: mainColor.withOpacity(0.5),
+          //themeListener.isDark ? lightWihteColor : mainColor,
+          // color: themeListener.isDark
+          //     ? lightWihteColor.withOpacity(0.5)
+          //     : mainColor.withOpacity(0.5),
+        ),
+        globalBackgroundColor:
+            //  themeListener.isDark ? darkGreyColor : lightWihteColor,
+            Colors.white,
+        rawPages: pages,
+        onChange: (index) {
+          setState(() {
+            currentIndex = index + 1;
+          });
+        },
+        curve: Curves.easeIn,
+      ),
+      bottomNavigationBar: SizedBox(
+        height: size.height * 0.20,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              MainButton(
+                // btnColor: currentIndex != 3 ? Colors.transparent : mainColor,
+                txtColor: Colors.white,
+                //     currentIndex != 3 ? Colors.transparent : darkGreyColor,
+                radius: 30,
+                text: currentIndex == 3
+                    ? AppLocalizations.of(context)!.signin
+                    : AppLocalizations.of(context)!.ccontinue,
+                widthFromScreen: 0.5,
+                onPressed: () {
+                  // if (currentIndex == 3) {
+                  //   Navigator.push(
+                  //       context,
+                  //       CupertinoPageRoute(
+                  //           builder: (context) => const LoginScreen()));
+                  // }
+                },
+              ),
+            ],
           ),
-          Expanded(
-            child: IntroductionScreen(
-              rawPages: listPagesViewModel,
-              done: Container(
-                decoration: BoxDecoration(
-                    color: mainColor, borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-                  child: Text(
-                    AppLocalizations.of(context)!.ccontinue,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              next: Container(
-                decoration: BoxDecoration(
-                    color: mainColor, borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-                  child: Text(
-                    AppLocalizations.of(context)!.ccontinue,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              skip: Text(
-                AppLocalizations.of(context)!.skip,
-                style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
-              ),
-              showSkipButton: true,
-              dotsDecorator: DotsDecorator(
-                  size: const Size.square(6.0),
-                  activeSize: const Size(30.0, 6.0),
-                  activeShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
-                  color: mainColor.withOpacity(0.5),
-                  activeColor: mainColor),
-              onSkip: () {
-                // Navigator.pushReplacement(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const TabsScreen()));
-              },
-              onDone: () {
-                // Navigator.pushReplacement(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const LoginScreen()));
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
